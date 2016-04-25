@@ -37,7 +37,7 @@ class PortfolioItems extends Model {
 	 * Get the stock that owns the portfolio items.
 	 */
 	public function stocks() {
-		return $this->belongsTo('App\Stocks');
+		return $this->belongsTo('App\Stocks','stock_id');
 	}
 
 }

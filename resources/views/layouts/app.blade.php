@@ -10,9 +10,16 @@
     <!-- Fonts -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700" rel='stylesheet' type='text/css'>
+    <!-- Material Design fonts -->
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/icon?family=Material+Icons">
 
     <!-- Styles -->
-    <link href="assets/vendor/bootstrap-3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ asset("assets/vendor/bootstrap-3.3.6/css/bootstrap.min.css")}}" rel="stylesheet">
+
+    <link href="{{ asset("assets/vendor/bootstrap-material-design/css/bootstrap-material-design.min.css")}}" rel="stylesheet">
+    <link href="{{ asset("assets/vendor/bootstrap-material-design/css/ripples.min.css")}}" rel="stylesheet">
+    
     @yield('stylesheets')
     <style>
         body {
@@ -25,7 +32,7 @@
     </style>
 </head>
 <body id="app-layout">
-    <nav class="navbar navbar-default navbar-static-top">
+    <nav class="navbar navbar-primary navbar-static-top">
         <div class="container">
             <div class="navbar-header">
 
@@ -47,7 +54,7 @@
                 <!-- Left Side Of Navbar -->
                 @if (Auth::user())
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ url('/dashboard') }}">Home</a></li>
+                    <li><a href="{{ url('/dashboard') }}">Dashboard</a></li>
                 </ul>
                 @endif
 
@@ -72,12 +79,19 @@
             </div>
         </div>
     </nav>
-
-    @yield('content')
-
+    <div class="container">
+        @include('common.errors')
+        @include('flash::message')
+        @yield('content')
+    </div>
     <!-- JavaScripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="assets/vendor/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script src="{{ asset("assets/vendor/bootstrap-3.3.6/js/bootstrap.min.js")}}"></script>
+    <script src="{{ asset("assets/vendor/bootstrap-material-design/js/material.min.js")}}"></script>
+    <script src="{{ asset("assets/vendor/bootstrap-material-design/js/ripples.min.js")}}"></script>
+    <script type="text/javascript">
+        $.material.init()
+    </script>
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
     @yield('scripts')
 </body>

@@ -30,6 +30,6 @@ class Categories extends Model
      */
     public function stocks()
     {
-        return $this->hasMany('App\Stocks');
+        return $this->hasMany('App\Stocks','category_id','id');
     }
 }

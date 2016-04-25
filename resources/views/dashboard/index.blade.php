@@ -6,17 +6,21 @@
 </style>
 @endsection
 @section('content')
-<div class="container">
-    @include('common.errors')
-    @include('flash::message')
-    <div class="row">
-        <div class="col-md-9">
-            <div class="panel panel-default">
-                <div class="panel-heading">Portfolio Dashboard</div>
-                <div class="panel-body">
-                  {!! Form::open(array('route' => 'addStocks')) !!}
-                    {!! Form::token() !!}
-                    <div class="form-group">
+<div class="row">
+    <div class="col-md-9">
+        <div class="panel panel-primary">
+            <div class="panel-body">
+              {!! Form::open(array('route' => 'addStocks')) !!}
+                {!! Form::token() !!}
+                <div class="row">
+                  <div class="col-sm-8">
+                    <div class="form-group" style="margin-top: 0px;">
+                      <label for="portfolio-stock-selector">Select Stocks</label>
+                      <select class="portfolio-stock-selector form-control" name="stocks[]" multiple="multiple" id="portfolio-stock-selector"></select>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group" style="margin-top: 0px;">
                       <label for="portfolio-category-selector">Select Category for Stock Listing</label>
                       <select class="portfolio-category-selector form-control" name="category[]" multiple="multiple" id="portfolio-category-selector">
                         @foreach($categories as $category)
@@ -24,30 +28,40 @@
                         @endforeach
                       </select>
                     </div>
-                    <div class="form-group">
-                      <label for="portfolio-stock-selector">Select Stocks</label>
-                      <select class="portfolio-stock-selector form-control" name="stocks[]" multiple="multiple" id="portfolio-stock-selector"></select>
-                    </div>
-                    <button type="submit" class="btn btn-success btn-block">Add Stocks</button>
-                  {!! Form::close() !!}
+                  </div>
                 </div>
+                <button type="submit" class="btn btn-success btn-block btn-raised">Add Stocks</button>
+              {!! Form::close() !!}
             </div>
-            <div class="row">
-              <div class="col-sm-12">
-
+        </div>
+        @foreach($pf as $item)
+        <div class="row">
+          <div class="col-sm-12">
+            <a href="{{url('stock', [$item->stocks->id,$item->stocks->stock_symbol])}}">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                {{$item->stocks->stock_symbol}}<br>
+                {{$item->stocks->stock_name}}<br>
+                {{$item->stocks->category->category_name}}<br>    
+                @if(!$item->stocks->init)
+                "initializing"
+                @endif
               </div>
             </div>
-        </div>
-        <div class="col-md-3">
-          <div class="panel panel-default">
-              <div class="panel-heading">Top Gainers</div>
-              <div class="panel-body"></div>
-          </div>
-          <div class="panel panel-default">
-              <div class="panel-heading">Top Losers</div>
-              <div class="panel-body"></div>
+            </a>
           </div>
         </div>
+        @endforeach
+    </div>
+    <div class="col-md-3">
+      <div class="panel panel-success">
+          <div class="panel-heading">Top Gainers</div>
+          <div class="panel-body"></div>
+      </div>
+      <div class="panel panel-danger">
+          <div class="panel-heading">Top Losers</div>
+          <div class="panel-body"></div>
+      </div>
     </div>
 </div>
 @endsection
@@ -79,10 +93,13 @@
         url: "getStockNames",
         dataType: 'json',
         data: function (params) {
-          console.log(params);
+          var cat = null;
+          if($('#portfolio-category-selector').val()){
+            cat = $('#portfolio-category-selector').val();
+          }
           return {
             term: params.term, // search term
-            category: $('#portfolio-category-selector').val()
+            category: cat
           };
         },
         processResults: function (data, params) {

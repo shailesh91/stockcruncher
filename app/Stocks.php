@@ -23,13 +23,21 @@ class Stocks extends Model {
 	 * Get the category that owns the stock.
 	 */
 	public function category() {
-		return $this->belongsTo('App\Categories');
+		return $this->belongsTo('App\Categories','category_id');
 	}
 
 	/**
 	 * Get the PortfolioItems for the stock.
 	 */
 	public function portfolio_items() {
-		return $this->hasMany('App\PortfolioItems');
+		return $this->hasMany('App\PortfolioItems','stock_id','id');
+	}
+
+	public function inst_data() {
+		return $this->hasMany('App\InstData','stock_id','id');
+	}
+
+	public function hist_data() {
+		return $this->hasMany('App\HistData','stock_id','id');
 	}
 }
