@@ -21,27 +21,41 @@
 <div class="row">
     <div class="col-sm-9">
     	<div class="row">
-          <div class="col-sm-12">
-          	<ul class="nav nav-pills">
-			    <li><a onclick="pastWeekPlot()" href="#">Past week</a></li>
-			    <li><a onclick="pastMonthPlot()" href="#">Past month</a></li>
-			    <li><a onclick="past6MonthsPlot()" href="#">Past 6 months</a></li>
-			    <li><a onclick="pastYearPlot()" href="#">Past year</a></li>
-			    <li><a onclick="realTimePlot()" href="#">Get Real Time Data</a></li>
-			</ul>
-			<span style="font-size:13px; font-weight:bold; margin-left:10px">Indicators</span>
-			<ul class="nav nav-pills">
-			    <li><a onclick="noIndicatorsPlot()" href="#">No Indicators</a></li>
-			    <li><a onclick="maPlot()" href="#">Moving Average</a></li>
-			    <li><a onclick="emaPlot()" href="#">Exponential Moving Average</a></li>
-			    <li><a onclick="rsiPlot()" href="#">RSI</a></li>
-			</ul>
-          </div>
+          	<div class="col-sm-12">
+          		<div id="realtime-chart">
+          			<h4>Realtime Stock Price Chart</h4>
+          			<svg></svg>
+          		</div>
+          	</div>
         </div>
         <div class="row">
-          <div class="col-sm-12">
-            <canvas id="myChart" height="200"></canvas>
-          </div>
+        	<div class="col-sm-12">
+				<h4>Historical Stock Price Chart</h4>
+	    		<div class="row">
+		          <div class="col-sm-12">
+		          	<ul class="nav nav-pills">
+					    <li><a onclick="pastWeekPlot()" href="#">Past week</a></li>
+					    <li><a onclick="pastMonthPlot()" href="#">Past month</a></li>
+					    <li><a onclick="past6MonthsPlot()" href="#">Past 6 months</a></li>
+					    <li><a onclick="pastYearPlot()" href="#">Past year</a></li>
+					</ul>
+					<span style="font-size:13px; font-weight:bold; margin-left:10px">Indicators</span>
+					<ul class="nav nav-pills">
+					    <li><a onclick="noIndicatorsPlot()" href="#">No Indicators</a></li>
+					    <li><a onclick="maPlot()" href="#">Moving Average</a></li>
+					    <li><a onclick="emaPlot()" href="#">Exponential Moving Average</a></li>
+					    <li><a onclick="rsiPlot()" href="#">RSI</a></li>
+					</ul>
+		          </div>
+		        </div>
+	          	<div class="graphDiv">
+					<div id="chart1" class='with-3d-shadow with-transitions'>
+					     <div id="chart_historic"></div>
+					     <div id="chart_historic_2"></div>
+					</div>
+				</div>
+			
+        	</div>
         </div>
 	</div>
 	<div class="col-sm-3">
@@ -63,8 +77,10 @@
 	symbol = "{{$st[0]->stock_symbol}}";
 </script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript" src="{{ asset("assets/js/stock-main.js")}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js" charset="utf-8"></script>
+<script src="{{ asset("assets/vendor/nv.d3/nv.d3.js")}}"></script>
 <script type="text/javascript" src="{{ asset("assets/vendor/chart.js/Chart.js")}}"></script>
+<script type="text/javascript" src="{{ asset("assets/js/stock-main.js")}}"></script>
 <script type="text/javascript">
 	google.load("visualization", "1", {packages:["corechart"]});
 	google.load("search", "1");
@@ -78,8 +94,8 @@ $.getJSON( "getRealTimeData", {
       console.log(data);
       setTimeout(doPoll,5000);
     });
-}</script>
-<script src="{{ asset("assets/vendor/nv.d3/nv.d3.min.js")}}"></script>-->
+}</script>-->
+
 
 
 <!--Start Load News about the Stock from Google News-->

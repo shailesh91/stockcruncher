@@ -76,34 +76,11 @@ function doAjaxHist(startDate_, endDate_, maWindow_) {
     });
 }
 
-function realTimePlot() {
-    console.debug("Real Time Data");
-    doAjax($.now() - 7 * 24 * 3600 * 1000, $.now());
-}
 
-function doAjax(startDate_, endDate_) {
-    $.ajax({
-        type: 'GET',
-        url: execuctionEngineAddr+'getRealTimeData',
-        data: {
-            stockid: stockid,
-            symbol: symbol,
-            startDate: startDate_,
-            endDate: endDate_
-        },
-        dataType: 'json',
-        success: function(data) {
-            console.log(data.messagel);
-            var json_data = JSON.stringify(eval("(" + data.messagel + ")"));
-            var json_obj = jQuery.parseJSON(json_data);
-            //drawNewPlot(json_obj);
-        }
-    });
-}
 
 
 function PLOT_title_update() {
-    document.getElementById('PLOT_title').innerHTML = "" + PLOT_range + " range plot  (indicator: " + PLOT_indicators + ")";
+    document.getElementById('PLOT_title').innerHTML = "" + PLOT_range + " Range Plot  (Indicator: " + PLOT_indicators + ")";
 }
 
 function drawVisualization(datapoints) {
@@ -137,6 +114,32 @@ function drawVisualization(datapoints) {
     });
 }
 
+
+function realTimePlot() {
+    console.debug("Real Time Data");
+    doAjax($.now() - 3 * 24 * 3600 * 1000, $.now());
+}
+
+function doAjax(startDate_, endDate_) {
+    $.ajax({
+        type: 'GET',
+        url: execuctionEngineAddr+'getRealTimeData',
+        data: {
+            stockid: stockid,
+            symbol: symbol,
+            startDate: startDate_,
+            endDate: endDate_
+        },
+        dataType: 'json',
+        success: function(data) {
+            //console.log(data.messagel);
+            var json_data = JSON.stringify(eval("(" + data.messagel + ")"));
+            var json_obj = jQuery.parseJSON(json_data);
+            drawNewPlot(json_obj);
+        }
+    });
+}
+
 function drawHistoricChart(datapoints) {
     PLOT_title_update();
     //$('graphcontainer1').html("");
@@ -157,11 +160,7 @@ function drawHistoricChart(datapoints) {
 
 
 function drawNewPlot(datapoints) {
-    //PLOT_title_update();
-    document.getElementById('PLOT_title').innerHTML = "";
-
-    $('svg').text("");
-
+    $('#realtime-chart svg').text("");
     var testdata = datapoints.map(function(series) {
         series.values = series.values.map(function(d) {
             return {
@@ -187,9 +186,9 @@ function drawNewPlot(datapoints) {
             .legendRightAxisHint(' (right axis)')
             .color(d3.scale.category10().range());
 
-        chart.xAxis.tickFormat(function(d) {
+            chart.xAxis.tickFormat(function(d) {
                 var dx = testdata[0].values[d] && testdata[0].values[d].x || 0;
-                return dx ? d3.time.format('%x')(new Date(dx)) : '';
+                return dx ? d3.time.format('%x %X')(new Date(dx)) : '';
             })
             .showMaxMin(false);
 
@@ -201,7 +200,7 @@ function drawNewPlot(datapoints) {
         chart.xAxis.showMaxMin(false);
         chart.x2Axis.showMaxMin(false);
 
-        d3.select('#chart1 svg')
+        d3.select('#realtime-chart svg')
             .datum(testdata)
             .transition().duration(500).call(chart);
 
