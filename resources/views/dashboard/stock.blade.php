@@ -33,25 +33,24 @@
 				<h4>Historical Stock Price Chart</h4>
 	    		<div class="row">
 		          <div class="col-sm-12">
-		          	<ul class="nav nav-pills">
-					    <li><a onclick="pastWeekPlot()" href="#">Past week</a></li>
-					    <li><a onclick="pastMonthPlot()" href="#">Past month</a></li>
-					    <li><a onclick="past6MonthsPlot()" href="#">Past 6 months</a></li>
-					    <li><a onclick="pastYearPlot()" href="#">Past year</a></li>
+		          	<ul class="nav nav-pills" id="range-selector">
+					    <li id="week-hist-btn" ><a href="javascript:pastWeekPlot()">Past week</a></li>
+					    <li id="month-hist-btn"><a href="javascript:pastMonthPlot()" >Past month</a></li>
+					    <li id="6month-hist-btn"><a href="javascript:past6MonthsPlot()" >Past 6 months</a></li>
+					    <li id="year-hist-btn" class="active"><a href="javascript:pastYearPlot()">Past year</a></li>
 					</ul>
 					<span style="font-size:13px; font-weight:bold; margin-left:10px">Indicators</span>
-					<ul class="nav nav-pills">
-					    <li><a onclick="noIndicatorsPlot()" href="#">No Indicators</a></li>
-					    <li><a onclick="maPlot()" href="#">Moving Average</a></li>
-					    <li><a onclick="emaPlot()" href="#">Exponential Moving Average</a></li>
-					    <li><a onclick="rsiPlot()" href="#">RSI</a></li>
+					<ul class="nav nav-pills" id="indicator-selector">
+					    <li id="none-indicator-btn"><a href="javascript:noIndicatorsPlot()" >No Indicators</a></li>
+					    <li id="ma-indicator-btn"><a href="javascript:maPlot()">Moving Average</a></li>
+					    <li id="ema-indicator-btn" class="active"><a href="javascript:emaPlot()">Exponential Moving Average</a></li>
+					    <li id="rsi-indicator-btn"><a href="javascript:rsiPlot()">RSI</a></li>
 					</ul>
 		          </div>
 		        </div>
-	          	<div class="graphDiv">
+		        <div class="graphDiv">
 					<div id="chart1" class='with-3d-shadow with-transitions'>
 					     <div id="chart_historic"></div>
-					     <div id="chart_historic_2"></div>
 					</div>
 				</div>
 			
@@ -96,8 +95,6 @@ $.getJSON( "getRealTimeData", {
     });
 }</script>-->
 
-
-
 <!--Start Load News about the Stock from Google News-->
 <script type="text/javascript">
 var newsSearch;
@@ -107,6 +104,7 @@ window.onload = function() {
     newsSearch.execute("{{$st[0]->stock_name}}");
     google.search.Search.getBranding('news_branding');
     realTimePlot();
+    PLOT_update();
 }
 function searchComplete() {
   	var news_content_el = document.getElementById('news_content');

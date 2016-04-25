@@ -1,4 +1,4 @@
-var PLOT_range = "year";
+var PLOT_range = "Year";
 var PLOT_indicators = "ema";
 var interval = 1000;
 var execuctionEngineAddr = "http://localhost:8080/stockcruncher-ee/data/";
@@ -24,33 +24,43 @@ function rsiPlot() {
 }
 
 function PLOT_update() {
-	if(PLOT_range == "week") pastWeekPlot();
-	else if(PLOT_range == "month") pastMonthPlot();
+    if(PLOT_range == "Week") pastWeekPlot();
+	else if(PLOT_range == "Month") pastMonthPlot();
 	else if(PLOT_range == "6month") past6MonthsPlot();
-	else if(PLOT_range == "year") pastYearPlot();
+	else if(PLOT_range == "Year") pastYearPlot();
+    $('#indicator-selector>li.active').removeClass('active');
+    $('#'+PLOT_indicators+'-indicator-btn').addClass('active');
 }
 
 function pastWeekPlot() {
-    PLOT_range = "week";
+    $('ul#range-selector>li.active').removeClass('active');
+    PLOT_range = "Week";
     console.debug("pastWeekPlot");
+    $('#week-hist-btn').addClass('active');
     doAjaxHist($.now() - 7 * 24 * 3600 * 1000, $.now(), 2);
 }
 
 function pastMonthPlot() {
-    PLOT_range = "month";
+    $('ul#range-selector>li.active').removeClass('active');
+    PLOT_range = "Month";
     console.debug("pastMonthPlot");
+    $('#month-hist-btn').addClass('active');
     doAjaxHist($.now() - 30 * 24 * 3600 * 1000, $.now(), 5);
 }
 
 function past6MonthsPlot() {
+    $('ul#range-selector>li.active').removeClass('active');
     PLOT_range = "6month";
     console.debug("past6MonthsPlot");
+    $('#6month-hist-btn').addClass('active');
     doAjaxHist($.now() - 6 * 30 * 24 * 3600 * 1000, $.now(), 10);
 }
 
 function pastYearPlot() {
-    PLOT_range = "year";
+    $('ul#range-selector>li.active').removeClass('active');
+    PLOT_range = "Year";
     console.debug("pastYearPlot");
+    $('#year-hist-btn').addClass('active');
     doAjaxHist($.now() - 365 * 24 * 3600 * 1000, $.now(), 30);
 }
 
@@ -68,44 +78,26 @@ function doAjaxHist(startDate_, endDate_, maWindow_) {
         },
         dataType: 'json',
         success: function(data) {
-            console.log(data.messagel);
             var json2_data = JSON.stringify(eval("(" + data.messagel + ")"));
             var json2_obj = jQuery.parseJSON(json2_data);
-            //drawVisualization(json2_obj.values);
+            drawHistoricPlot(json2_obj.values);
         }
     });
 }
 
-
-
-
-function PLOT_title_update() {
-    document.getElementById('PLOT_title').innerHTML = "" + PLOT_range + " Range Plot  (Indicator: " + PLOT_indicators + ")";
-}
-
-function drawVisualization(datapoints) {
-    PLOT_title_update();
-    // Populate the data table.
-    // var datapoints = [
-    //     ['Mon', 20, 28, 38, 45, 30],
-    //     ['Tue', 31, 38, 55, 66, 50],
-    //     ['Wed', 50, 55, 77, 80, 45],
-    //     ['Thu', 77, 77, 66, 50, 65],
-    //     ['Fri', 68, 66, 22, 15, 80]
-    // // Treat first row as data as well.
-    // ];
+function drawHistoricPlot(datapoints) {
     var dataTable = google.visualization.arrayToDataTable(datapoints, true);
 
     // Draw the chart.
-    var chart = new google.visualization.ComboChart(document.getElementById('chart_historic_2'));
+    var chart = new google.visualization.ComboChart(document.getElementById('chart_historic'));
     chart.draw(dataTable, {
         legend: 'none',
-        width: 775,
         height: 350,
         seriesType: 'candlesticks',
+        backgroundColor: 'transparent',
         series: {
             0: {
-                color: "Black"
+                color: "orange"
             },
             1: {
                 type: 'line'
@@ -113,7 +105,6 @@ function drawVisualization(datapoints) {
         }
     });
 }
-
 
 function realTimePlot() {
     console.debug("Real Time Data");
@@ -139,25 +130,6 @@ function doAjax(startDate_, endDate_) {
         }
     });
 }
-
-function drawHistoricChart(datapoints) {
-    PLOT_title_update();
-    //$('graphcontainer1').html("");
-    //$('graphcontainer2').html("<div id='chart_historic' style='width: 900px; height: 500px;'></div>");
-
-    var datah = google.visualization.arrayToDataTable(datapoints, true);
-    var options = {
-        legend: 'none',
-        height: '350',
-        weight: '775'
-    };
-
-    var charth = new google.visualization.CandlestickChart(document.getElementById('chart_historic'));
-
-    console.debug("datah    " + datah);
-    charth.draw(datah, options);
-}
-
 
 function drawNewPlot(datapoints) {
     $('#realtime-chart svg').text("");
