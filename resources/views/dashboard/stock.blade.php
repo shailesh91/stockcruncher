@@ -12,7 +12,11 @@
 				  		<h2 style="margin-top: 10px">{{$st[0]->stock_name}}(<strong>{{$st[0]->stock_symbol}}</strong>)</h2>
 				  		<h4>{{$st[0]->category->category_name}}</h4>
 				  	</div>
-				  	<div class="col-sm-9"></div>
+				  	<div class="col-sm-9">
+				  		<pre>
+				  		{{--*/print_r($pfi);/*--}}
+				  		</pre>
+				  	</div>
 				  </div>
 			</div>
 		</div>
@@ -22,7 +26,7 @@
     <div class="col-sm-9">
     	<div class="row">
           	<div class="col-sm-12">
-          		<div id="realtime-chart">
+          		<div id="realtime-chart" style="height: 400px">
           			<h4>Realtime Stock Price Chart</h4>
           			<svg></svg>
           		</div>
@@ -86,14 +90,7 @@
 </script>
 <!--
 <script type="text/javascript">
-function doPoll(){
-$.getJSON( "getRealTimeData", {
-    stockid:11
-  }).done(function( data ) {
-      console.log(data);
-      setTimeout(doPoll,5000);
-    });
-}</script>-->
+</script>-->
 
 <!--Start Load News about the Stock from Google News-->
 <script type="text/javascript">
@@ -105,6 +102,7 @@ window.onload = function() {
     google.search.Search.getBranding('news_branding');
     realTimePlot();
     PLOT_update();
+    setInterval(realTimePlot,60000);
 }
 function searchComplete() {
   	var news_content_el = document.getElementById('news_content');

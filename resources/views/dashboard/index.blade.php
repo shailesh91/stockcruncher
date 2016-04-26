@@ -7,7 +7,7 @@
 @endsection
 @section('content')
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-12">
         <div class="panel panel-primary">
             <div class="panel-body">
               {!! Form::open(array('route' => 'addStocks')) !!}
@@ -37,31 +37,29 @@
         @foreach($pf as $item)
         <div class="row">
           <div class="col-sm-12">
+            @if($item->stocks->init)
             <a href="{{url('stock', [$item->stocks->id,$item->stocks->stock_symbol])}}">
+            @endif
             <div class="panel panel-default">
               <div class="panel-body">
                 {{$item->stocks->stock_symbol}}<br>
                 {{$item->stocks->stock_name}}<br>
-                {{$item->stocks->category->category_name}}<br>    
+                {{$item->stocks->category->category_name}}<br> 
                 @if(!$item->stocks->init)
                 "initializing"
+                @else
+                <pre>   
+                {{--*/print_r($pfi[$item->stocks->id]);/*--}}
+                </pre>
                 @endif
               </div>
             </div>
+            @if($item->stocks->init)
             </a>
+            @endif
           </div>
         </div>
         @endforeach
-    </div>
-    <div class="col-md-3">
-      <div class="panel panel-success">
-          <div class="panel-heading">Top Gainers</div>
-          <div class="panel-body"></div>
-      </div>
-      <div class="panel panel-danger">
-          <div class="panel-heading">Top Losers</div>
-          <div class="panel-body"></div>
-      </div>
     </div>
 </div>
 @endsection

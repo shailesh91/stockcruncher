@@ -2,6 +2,7 @@ var PLOT_range = "Year";
 var PLOT_indicators = "ema";
 var interval = 1000;
 var execuctionEngineAddr = "http://localhost:8080/stockcruncher-ee/data/";
+var chart;
 
 function noIndicatorsPlot() { 
     PLOT_indicators="none"; 
@@ -87,28 +88,58 @@ function doAjaxHist(startDate_, endDate_, maWindow_) {
 
 function drawHistoricPlot(datapoints) {
     var dataTable = google.visualization.arrayToDataTable(datapoints, true);
-
     // Draw the chart.
     var chart = new google.visualization.ComboChart(document.getElementById('chart_historic'));
-    chart.draw(dataTable, {
-        legend: 'none',
-        height: 350,
-        seriesType: 'candlesticks',
-        backgroundColor: 'transparent',
-        series: {
-            0: {
-                color: "orange"
-            },
-            1: {
-                type: 'line'
+    if(PLOT_indicators=="none"){
+        chart.draw(dataTable, {
+            legend: 'none',
+            height: 350,
+            seriesType: 'candlesticks',
+            backgroundColor: 'transparent',
+            vAxes: {0: {logScale: false},1: {logScale: false}},
+            series: {
+                0: {
+                    color: "orange",
+                    targetAxisIndex:0
+                },
+                1:{
+                    color: "#4682b4",
+                    type: 'bars',
+                    targetAxisIndex:1
+                }
             }
-        }
-    });
+        });
+    }else{   
+        chart.draw(dataTable, {
+            legend: 'none',
+            height: 350,
+            seriesType: 'candlesticks',
+            backgroundColor: 'transparent',
+            vAxes: {0: {logScale: false},1: {logScale: false}},
+            series: {
+                0: {
+                    color: "orange",
+                    targetAxisIndex:0
+                },
+                1: {
+                    type: 'line',
+                    targetAxisIndex:0
+                },
+                2:{
+                    color: "#4682b4",
+                    type: 'bars',
+                    targetAxisIndex:1
+                }
+            }
+        });
+    }
 }
 
 function realTimePlot() {
     console.debug("Real Time Data");
-    doAjax($.now() - 3 * 24 * 3600 * 1000, $.now());
+    var d = new Date();
+    var output =  new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+    doAjax(output - 24 * 3600 * 1000 , output + 24 * 3600 * 1000 - 1);
 }
 
 function doAjax(startDate_, endDate_) {
@@ -142,8 +173,7 @@ function drawNewPlot(datapoints) {
         });
         return series;
     });
-
-    var chart;
+    
     nv.addGraph(function() {
         chart = nv.models.linePlusBarChart()
             .margin({
@@ -163,9 +193,10 @@ function drawNewPlot(datapoints) {
                 return dx ? d3.time.format('%x %X')(new Date(dx)) : '';
             })
             .showMaxMin(false);
+            chart.options({height: 350});
 
         chart.y1Axis.tickFormat(function(d) {
-            return '$' + d3.format(',f')(d)
+            return d3.format(',f')(d)
         });
         chart.bars.forceY([0]).padData(false);
 

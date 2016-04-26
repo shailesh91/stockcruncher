@@ -13,6 +13,4 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('/getStockNames', 'AjaxQueryController@getStockNames');
     Route::get('/getRealTimeData', 'AjaxQueryController@getRealTimeData');
     Route::get('/getHistoricalData', 'AjaxQueryController@getHistoricalData');
-    
-
 });
